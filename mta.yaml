@@ -1,0 +1,49 @@
+ID: ChatbotBackendService
+_schema-version: '2.1'
+version: 0.0.1
+
+modules:
+ - name: ChatBotService
+   type: java
+   path: ChatBotService
+   parameters:
+      memory: 1024M
+   requires:
+     - name: ChatBotApp-uaa
+     - name: chatbotbackenddest
+   provides:
+    - name: ChatBotService_api
+      properties:
+         url: ${default-url}
+         
+ - name: bookshop.approuter
+   type: nodejs
+   path: bookshop.approuter
+   provides:
+    - name: bookshop.approuter_api
+      properties:
+         url: ${default-url}
+   requires:
+     - name: ChatBotApp-uaa
+     - name: ChatBotService_api
+       group: destinations
+       properties:
+         name: chatbotbackenddest
+         url: ~{url}
+         forwardAuthToken: true
+   parameters:
+      memory: 1024M
+      disk-quota: 1024M
+      
+resources:
+ - name: ChatBotApp-uaa
+   parameters:
+     path: ./xs-security.json
+     service: xsuaa
+     service-plan: application
+   type: com.sap.xs.uaa
+ - name: chatbotbackenddest
+   type: org.cloudfoundry.managed-service
+   parameters:
+     service-plan: lite
+     service: destination

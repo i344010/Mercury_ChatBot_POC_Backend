@@ -1,0 +1,17 @@
+{
+	"welcomeFile": "index.html",
+	"authenticationMethod":"route",
+	"routes": [
+	{
+		"source": "^/chatbotservice/(.*)$",
+		"target": "$1",
+		"destination": "chatbotbackenddest",
+		"authenticationType": "xsuaa"
+	},
+   	{
+		"source": "^/(.*)$",
+		"destination": "chatbotbackenddest",
+		"target": "$1",	
+		"authenticationType": "xsuaa"
+	}]
+}
